@@ -1,5 +1,5 @@
 semaphore reader_mutex=1
-semaphore writer_mutex=1
+semaphore write=1
 semaphore equal=1
 readcount=0
 
@@ -11,7 +11,7 @@ while(true){
     wait(reader_mutex)
     readcount++
     if(readcount==1){
-        wait(writer_mutex)
+        wait(write)
     }
     signal(reader_mutex)
     signal(equal)
@@ -21,7 +21,7 @@ while(true){
     wait(reader_mutex)
     readcount--
     if(readcount==0){
-        signal(writer_mutex)
+        signal(write)
     }
     signal(reader_mutex)
 
@@ -32,11 +32,11 @@ Writer:
 while(true){
 
     wait(equal)
-    wait(writer_mutex)
+    wait(write)
     signal(equal)
 
     //Writing action performed
 
-    signal(writer_mutex)
+    signal(write)
 
 }
