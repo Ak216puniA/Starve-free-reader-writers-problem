@@ -1,0 +1,42 @@
+semaphore reader_mutex=1
+semaphore writer_mutex=1
+semaphore equal=1
+readcount=0
+
+Reader:
+
+while(true){
+
+    wait(equal)
+    wait(reader_mutex)
+    readcount++
+    if(readcount==1){
+        wait(writer_mutex)
+    }
+    signal(reader_mutex)
+    signal(equal)
+
+    //Reading action performed
+
+    wait(reader_mutex)
+    readcount--
+    if(readcount==0){
+        signal(writer_mutex)
+    }
+    signal(reader_mutex)
+
+}
+
+Writer:
+
+while(true){
+
+    wait(equal)
+    wait(writer_mutex)
+    signal(equal)
+
+    //Writing action performed
+
+    signal(writer_mutex)
+
+}
